@@ -5,8 +5,8 @@ import java.sql.DriverManager;
 
 public class DatabaseManager {
 
-        private static SQLDriver _driver;
-        public SQLDriver getDriver()
+        private static SqlDriver _driver;
+        public SqlDriver getDriver()
         {
             return _driver;
         }
@@ -41,11 +41,11 @@ public class DatabaseManager {
         * @param driver driver (SqlDriver)
         * @param uri example: jdbc:derby://localhost:1527
         */
-	public DatabaseManager(SQLDriver driver, String uri, String username, String password)
+	public static void start(SqlDriver driver, String uri, String username, String password)
 	{
-            this._driver = driver;
-            this._uri = uri;
-            this._username = username;
-            this._password = password;
+            _driver = driver;
+            _uri = uri;
+            _username = username;
+            _password = password;
 	}
 }
