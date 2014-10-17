@@ -1,32 +1,53 @@
 package sqlexpression;
 
-import java.util.HashMap;
+import java.sql.Connection;
 import java.sql.ResultSet;
+import java.util.HashMap;
 
 public abstract class SqlExpression {
 
-	private String _from;
-	private HashMap<String,Object> _whereclauses;
-	private ResultSet _result;
+    private Connection _connection;
+    private String _from;
+    private HashMap<String,Object> _whereclauses;
+    private ResultSet _result;
 	
-	public SqlExpression(String table) {
-		
-		this._from = table;
+    public SqlExpression(Connection connection) {		
+            this._connection = connection;
 	}
 	
-        private boolean ValidateExpression()
+    /**
+     * @return the _from
+     */
+    public String getFrom() {
+        return _from;
+    }
+
+    /**
+     * @param _from the _from to set
+     */
+    public void setFrom(String _from) {
+        this._from = _from;
+    }
+    
+    protected boolean validateExpression() throws SqlExpressionException
+    {
+        if(_from == null)
         {
-            //validation here
-            return true;
+            throw new SqlExpressionException("Missing table");
         }
+
+        return true;
+    }
         
-        public ResultSet Execute() throws SqlExpressionException
-        {
-            if(ValidateExpression())
-                throw new SqlExpressionException("Something is wrong with the sql expression.");
+    public ResultSet execute() throws SqlExpressionException
+    {
+        if(validateExpression() == false)
+           throw new SqlExpressionException("Something is wrong with the sql expression.");
             
-            return ExecuteQuery();
-        }
+        _result = execute(_connection);
+        return _result;
+     }
         
-	protected abstract ResultSet ExecuteQuery();
+    protected abstract ResultSet execute(Connection _connection) throws SqlExpressionException;
+    protected abstract boolean hasResultSet();
 }
