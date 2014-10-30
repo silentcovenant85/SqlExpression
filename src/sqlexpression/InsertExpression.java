@@ -59,36 +59,35 @@ public class InsertExpression extends SqlExpression {
             
     @Override
     protected ResultSet execute(Connection _connection) throws SqlExpressionException {
-           StringBuilder builder = new StringBuilder("INSERT INTO");
-           builder.append(" " + this.getFrom() + " (");
-           
-           for(Entry<String, Object> item : _inserts.entrySet())
-           {
-               builder.append(item.getKey()+",");
-           }
-           builder.deleteCharAt(builder.lastIndexOf(","));
-           builder.append(")");
-           builder.append(" VALUES(");
-           for(Entry<String, Object> item : _inserts.entrySet())
-           {
-               Object obj = item.getValue();
-               String objStr = "";
-               if(obj.getClass().isInstance(String.class) == false)//non-numeric
-               {
-                   objStr = "'"+obj+"'";
-               }
-               
-               builder.append(objStr+",");
-           }
-           builder.deleteCharAt(builder.lastIndexOf(","));
-           builder.append(")");
+        StringBuilder builder = new StringBuilder("INSERT INTO");
+        builder.append(" " + this.getFrom() + " (");
 
+        for(Entry<String, Object> item : _inserts.entrySet())
+        {
+            builder.append(item.getKey()+",");
+        }
+        builder.deleteCharAt(builder.lastIndexOf(","));
+        builder.append(")");
+        builder.append(" VALUES(");
+        for(Entry<String, Object> item : _inserts.entrySet())
+        {
+            Object obj = item.getValue();
+            String objStr = "";
+            if(obj.getClass().isInstance(String.class) == false)//non-numeric
+            {
+                objStr = "'"+obj+"'";
+            }
+
+            builder.append(objStr+",");
+        }
+        builder.deleteCharAt(builder.lastIndexOf(","));
+        builder.append(")");
             
         try {
             _connection.createStatement().execute(builder.toString());
         } catch (SQLException ex) {
             
-            throw new SqlExpressionException("Error occured during insert.");
+            throw new SqlExpressionException("Error occured during insert.\nQuery:\n"+builder.toString());
         }
           
            return null;
