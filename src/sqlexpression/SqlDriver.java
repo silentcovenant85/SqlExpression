@@ -12,18 +12,25 @@ package sqlexpression;
  */
 public enum SqlDriver {
     
-    MySql("com.mysql.jdbc.Driver"),
-    PostGre("org.postgresql.Driver"),
-    Derby("org.apache.derby.jdbc.ClientDriver");
+    MySql("com.mysql.jdbc.Driver","jdbc:mysql"),
+    PostGre("org.postgresql.Driver","jdbc:postgre"),
+    Derby("org.apache.derby.jdbc.ClientDriver","jdbc:derby");
             
-    private SqlDriver(String driver)
+    private SqlDriver(String driver,String uri)
     {
         this._driver = driver;
+        this._uri = uri;
     }
     
     private String _driver;
     public String getDriver()
     {
        return _driver;
+    }
+    
+    private String _uri;
+    public String getUri()
+    {
+        return _uri;
     }
 }

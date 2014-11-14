@@ -2,9 +2,13 @@ package sqlexpression;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.util.HashMap;
+
 
 public class DatabaseManager {
 
+        private static HashMap<String,Connection> _connections = new HashMap<String,Connection>();
+                
         private static SqlDriver _driver;
         public SqlDriver getDriver()
         {
@@ -15,26 +19,39 @@ public class DatabaseManager {
         private static String _password;
         private static String _uri;
     
-	private static Connection _connection;
 	public static Connection get_connection() {
-		
-		if(_connection == null)
+
+               Connection _connection = null;
+		if(_connections.containsKey(_uri) == false)
 		{
-			initializeConnection();
+                    _connection = initializeConnection();
 		}
-		
+                else    
+                {
+                    _connection = _connections.get(_uri);
+                }
+                
 		return _connection;
 	} 
-	private static void initializeConnection() {
+	private static Connection initializeConnection() {
+            
+            	Connection _connection = null;
 		try {
-			
+		
 			Class.forName(_driver.getDriver());
 			_connection = DriverManager.getConnection(_uri,_username ,_password);
+                        
+                        if(_connections.containsKey(_uri) == false)
+                        {
+                            _connections.put(_uri, _connection);
+                        }
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+                
+               return _connection;
 	}
                 
         /**
@@ -45,6 +62,13 @@ public class DatabaseManager {
 	{
             _driver = driver;
             _uri = uri;
+            _username = username;
+            _password = password;
+	}
+        public static void start(SqlDriver driver, String server, int port, String tableName, String username, String password)
+	{
+            _driver = driver;
+            _uri = _driver.getUri() + "://" + server + ":" + port + "/" + tableName;
             _username = username;
             _password = password;
 	}
