@@ -26,6 +26,8 @@ public class DatabaseTest extends TestCase {
     
         DatabaseManager.start(SqlDriver.MySql,"jdbc:mysql://localhost:3306/mysql","root","");
         DatabaseManager.start(SqlDriver.Derby,"jdbc:derby://localhost:1527/sample","app","app");
+        DatabaseManager.start(SqlDriver.MySql,"localhost",3306,"mysql","root","");
+        DatabaseManager.start(SqlDriver.Derby,"localhost",1527,"sample","app","app");
         
         Assert.assertNotNull(DatabaseManager.get_connection());
     }
