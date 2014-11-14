@@ -5,6 +5,7 @@ This project is to abstract SQL queries into an easy-to-use (or at least easier-
 ### Done
 
 - Insert SQL Expression
+- Select SQL Expression
 
 ### How to begin
 
