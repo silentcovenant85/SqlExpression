@@ -93,9 +93,5 @@ public class InsertExpression extends SqlExpression {
            return null;
     }
 
-    @Override
-    protected boolean hasResultSet() {
-        return false;
-    }
-    
+
 }
