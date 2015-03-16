@@ -7,6 +7,8 @@ public abstract class SqlExpression {
 
     private Connection _connection;
     private String _from;
+    private String _expression;
+    
     private ResultSet _result;
 	
     public SqlExpression(Connection connection) {		
@@ -47,4 +49,18 @@ public abstract class SqlExpression {
      }
             
     protected abstract ResultSet execute(Connection _connection) throws SqlExpressionException;
+
+    /**
+     * @return the _expression
+     */
+    protected String getExpression() {
+        return _expression;
+    }
+
+    /**
+     * @param _expression the _expression to set
+     */
+    protected void setExpression(String _expression) {
+        this._expression = _expression;
+    }
 }

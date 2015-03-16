@@ -6,11 +6,13 @@
 
 package sqlexpression;
 
+import java.sql.SQLException;
+
 /**
  *
  * @author vladimir
  */
-public class SqlExpressionException extends Exception{
+public class SqlExpressionException extends SQLException{
     
     public SqlExpressionException(String exception)
     {

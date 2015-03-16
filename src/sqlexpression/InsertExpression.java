@@ -9,18 +9,18 @@ import java.util.Map.Entry;
 
 public class InsertExpression extends SqlExpression {
 
-    private Map<String,Object> _inserts;
+    private Map<String,String> _inserts;
 	
     public InsertExpression(Connection _connection) {
 	super(_connection);
-        _inserts = new LinkedHashMap<String,Object>();
+        _inserts = new LinkedHashMap<String,String>();
     }
     public InsertExpression(Connection _connection, String table) {
 		this(_connection);
                 super.setFrom(table);
 		// TODO Auto-generated constructor stub
 	}
-    public InsertExpression(Connection _connection,String table, LinkedHashMap<String,Object> values)
+    public InsertExpression(Connection _connection,String table, LinkedHashMap<String,String> values)
 	{
 		this(_connection);
 		this._inserts = values;
@@ -29,22 +29,46 @@ public class InsertExpression extends SqlExpression {
     /**
      * @return the _inserts
      */
-    public Map<String,Object> getInserts() {
+    public Map<String,String> getInserts() {
         return _inserts;
     }
     /**
      * @param _inserts the _inserts to set
      */
-    public void setInserts(Map<String,Object> _inserts) {
+    public void setInserts(Map<String,String> _inserts) {
         this._inserts = _inserts;
     }
 
-    public void AddInsert(String key, Object value)
+    public void insert(String key, Object value)
     {
         if(this._inserts.containsKey(key))
             return;
         
-        this._inserts.put(key, value);
+        String strValue = "";
+        if(value.getClass().equals(String.class) && (!value.toString().startsWith("'")&&!value.toString().endsWith("'")))
+        {
+            strValue = "'" + value + "'";
+        }
+        else 
+            strValue= value.toString();
+        
+        this._inserts.put(key, strValue);
+    }
+    
+    /*
+    *  Usage: Insert("key":value)
+    *   
+    */
+    public void insert(String expression)
+    {
+        String[] tokens = expression.split(";");
+        for (String token : tokens) {
+            String[] subTokens = token.split(":");
+            String key = subTokens[0];
+            String value = subTokens[1];
+            
+            insert(key.trim(),value.trim());
+        }
     }
 
     protected boolean validateExpression() throws SqlExpressionException 
@@ -62,36 +86,28 @@ public class InsertExpression extends SqlExpression {
         StringBuilder builder = new StringBuilder("INSERT INTO");
         builder.append(" " + this.getFrom() + " (");
 
-        for(Entry<String, Object> item : _inserts.entrySet())
+        for(Entry<String, String> item : _inserts.entrySet())
         {
             builder.append(item.getKey()+",");
         }
         builder.deleteCharAt(builder.lastIndexOf(","));
         builder.append(")");
         builder.append(" VALUES(");
-        for(Entry<String, Object> item : _inserts.entrySet())
+        for(Entry<String, String> item : _inserts.entrySet())
         {
-            Object obj = item.getValue();
-            String objStr = "";
-            if(obj.getClass().isInstance(String.class) == false)//non-numeric
-            {
-                objStr = "'"+obj+"'";
-            }
-
-            builder.append(objStr+",");
+            builder.append(item.getValue()+",");
         }
         builder.deleteCharAt(builder.lastIndexOf(","));
         builder.append(")");
             
         try {
-            _connection.createStatement().execute(builder.toString());
+            setExpression(builder.toString());
+            _connection.createStatement().execute(this.getExpression());
         } catch (SQLException ex) {
             
             throw new SqlExpressionException("Error occured during insert.\nQuery:\n"+builder.toString());
         }
           
-           return null;
+        return null;
     }
-
-
 }

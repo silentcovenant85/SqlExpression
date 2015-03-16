@@ -35,10 +35,13 @@ public class SelectExpression extends ConditionalSqlExpression {
     
     public void select(String selection)
     {
-        if(_selects.contains(selection))
-            return;
-        
-        _selects.add(selection);
+        String[] tokens = selection.split(",");
+        for (String token : tokens) {
+              if(_selects.contains(token))
+                continue;
+              
+            _selects.add(token);
+        }
     }
     
     @Override
@@ -74,7 +77,9 @@ public class SelectExpression extends ConditionalSqlExpression {
          str.delete(str.lastIndexOf("A"),str.lastIndexOf("A") + 3);
         
          try {
-            return _connection.createStatement().executeQuery(str.toString());
+            
+            this.setExpression(str.toString());
+            return _connection.createStatement().executeQuery(this.getExpression());
         } catch (SQLException ex) {
             
             throw new SqlExpressionException("Error occured during selection.\nQuery:\n"+str.toString());
