@@ -8,7 +8,8 @@ This project is to abstract SQL queries into an easy-to-use (or at least easier-
 - Select SQL Expression
 - Delete SQL Expression
 - Update SQL Expression
-- 
+
+
 ### How to begin
 
 #### Using derby
