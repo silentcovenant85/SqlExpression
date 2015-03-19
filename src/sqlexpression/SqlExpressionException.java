@@ -14,8 +14,13 @@ import java.sql.SQLException;
  */
 public class SqlExpressionException extends SQLException{
     
-    public SqlExpressionException(String exception)
+     public SqlExpressionException(String msg)
     {
-        super("Something is wrong with your sql statement.",exception);
+        super(msg);
+    }
+     
+    public SqlExpressionException(String msg, SQLException exception)
+    {
+        super(msg,exception);
     }
 }

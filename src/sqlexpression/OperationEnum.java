@@ -17,16 +17,20 @@ public enum OperationEnum {
     GreaterThan(">"),
     LesserThan("<"),
     GreaterOrEqual(">="),
-    LesserThanOrEqual("<=");
+    LesserThanOrEqual("<="),
+    NOT_IN("NOT IN"),
+    IN("IN");
     
     OperationEnum(String str)
     {
-        _equivalent = str;
+        _strOP = str;
     }
     
-    private String _equivalent;
+    private String _strOP;
+    
+    @Override
     public String toString()
     {
-        return _equivalent;
+        return _strOP;
     }
 }

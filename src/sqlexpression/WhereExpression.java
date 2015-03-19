@@ -12,25 +12,41 @@ package sqlexpression;
  */
 public class WhereExpression extends OperationExpression<String,Object>{
 
-    public WhereExpression(String operand1, Object operand2, OperationEnum op) {
+    public WhereExpression(String operand1, Object operand2, OperationEnum op) throws SqlExpressionException {
         super(operand1, operand2, op);
     }  
     
     @Override
     public String toString()
     {
-        StringBuilder retval = new StringBuilder();
-        retval.append("(" + this.getOperand1());
-        retval.append(this.getOperation().toString());
+        StringBuilder expression = new StringBuilder();
+        expression.append("(").append(this.getOperand1()).append(" ");
+        expression.append(this.getOperation().toString()).append(" ");
         
         String operand2 = "";
         if(this.getOperand2() instanceof String)
             operand2 = "'" + this.getOperand2().toString() + "'";
+        
+        if(this.getOperand2() instanceof Iterable)
+        {
+            operand2+="(";
+            for (Object item : (Iterable)this.getOperand2()) {
+                if(item instanceof String)
+                    operand2 += "'" + this.getOperand2().toString() + "'";
+                else
+                    operand2 += this.getOperand2().toString();
+                
+                operand2+=",";
+            }
+           
+            operand2 = operand2.substring(0,operand2.lastIndexOf(",")); 
+            operand2+=")";
+        }
         else
             operand2 = this.getOperand2().toString();
-              
-        retval.append(operand2 + ")");
         
-        return retval.toString();
+        expression.append(operand2).append(")");
+        
+        return expression.toString();
     }
 }

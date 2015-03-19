@@ -21,7 +21,7 @@ public abstract class ConditionalSqlExpression extends SqlExpression{
         _whereclauses = new ArrayList<WhereExpression>();
     }
         
-    public void where(String memberName,OperationEnum op, Object value)
+    public void where(String memberName,OperationEnum op, Object value) throws SqlExpressionException
     {
         WhereExpression exp = new WhereExpression(memberName, value, op);
         where(exp);

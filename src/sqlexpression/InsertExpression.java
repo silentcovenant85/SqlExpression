@@ -116,7 +116,7 @@ public class InsertExpression extends SqlExpression {
             
         } catch (SQLException ex) {
             
-            throw new SqlExpressionException("Error occured during insert.\nQuery:\n"+expression.toString());
+            throw new SqlExpressionException("Error occured during insert.\nQuery:\n"+expression.toString(), ex);
         }
           
         return null;

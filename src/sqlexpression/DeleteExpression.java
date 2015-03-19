@@ -28,7 +28,7 @@ public class DeleteExpression extends ConditionalSqlExpression {
             
         } catch (SQLException ex) {
             
-            throw new SqlExpressionException("Error occured during deletion.\nQuery:\n"+ expression.toString());
+            throw new SqlExpressionException("Error occured during deletion.\nQuery:\n"+ expression.toString(),ex);
         }
          
          return null;

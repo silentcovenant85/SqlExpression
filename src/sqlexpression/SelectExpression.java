@@ -50,7 +50,7 @@ public class SelectExpression extends ConditionalSqlExpression {
             
         } catch (SQLException ex) {
             
-            throw new SqlExpressionException("Error occured during selection.\nQuery:\n"+ expression);
+            throw new SqlExpressionException("Error occured during selection.\nQuery:\n"+ expression, ex);
         }
     }
 

@@ -6,6 +6,7 @@
 package sqlexpressiontest;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import junit.framework.TestCase;
 import sqlexpression.DatabaseManager;
 import sqlexpression.DeleteExpression;
@@ -73,6 +74,20 @@ public class DatabaseTest extends TestCase {
         exp.select("PROD_CODE");
         exp.select("DISCOUNT_CODE,DESCRIPTION");
         exp.where("PROD_CODE", OperationEnum.Equal, "XX");
+        exp.execute();
+    }
+    
+    public void testINexpression() throws SqlExpressionException{
+  
+        testInsertExpression();
+    
+        SelectExpression exp = new SelectExpression(DatabaseManager.get_connection(), "MYPRODUCT");
+        exp.select("PROD_CODE");
+        exp.select("DISCOUNT_CODE,DESCRIPTION");
+        
+        ArrayList<String> list = new ArrayList<String>();
+        list.add("XX");
+        exp.where("PROD_CODE", OperationEnum.NOT_IN, list);
         exp.execute();
     }
     

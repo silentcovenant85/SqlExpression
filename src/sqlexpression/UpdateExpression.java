@@ -87,7 +87,7 @@ public class UpdateExpression extends ConditionalSqlExpression{
             
         } catch (SQLException ex) {
             
-            throw new SqlExpressionException("Error occured during update.\nQuery:\n"+ expression.toString());
+            throw new SqlExpressionException("Error occured during update.\nQuery:\n"+ expression.toString(), ex);
         }
           
         return null;

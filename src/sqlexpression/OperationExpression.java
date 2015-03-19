@@ -3,6 +3,8 @@
  */
 package sqlexpression;
 
+import java.sql.SQLException;
+
 /**
  *
  * @author vladimir
@@ -13,10 +15,18 @@ public class OperationExpression<T,V> {
     private T _operand1;
     private V _operand2;
 
-    public OperationExpression(T operand1, V operand2, OperationEnum op) {
+    public OperationExpression(T operand1, V operand2, OperationEnum op) throws SqlExpressionException {
         this._operand1 = operand1;
         this._operand2 = operand2;
         this._operation = op;
+        
+        if(_operation == OperationEnum.IN | _operation == OperationEnum.NOT_IN)
+        {
+            if((_operand2 instanceof Iterable) == false)
+            {
+                throw new SqlExpressionException("IN and NOT IN  shoud have an iterable operand 2.", new SQLException());
+            }
+        }
     }
 
     /**
