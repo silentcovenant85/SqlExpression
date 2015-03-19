@@ -99,9 +99,9 @@ public class InsertExpression extends SqlExpression {
         }
         builder.deleteCharAt(builder.lastIndexOf(","));
         builder.append(")");
-            
+        setExpression(builder.toString());
+                    
         try {
-            setExpression(builder.toString());
             _connection.createStatement().execute(this.getExpression());
         } catch (SQLException ex) {
             

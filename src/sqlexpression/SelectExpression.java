@@ -61,24 +61,10 @@ public class SelectExpression extends ConditionalSqlExpression {
         }
         
         str.append(" FROM " + this.getFrom());
+        str = super.buildCondition(str);
+        this.setExpression(str.toString());
         
-        boolean first = true;
-        for(WhereExpression exp : this.getWhereStatements())
-        {
-            if(first)
-            {
-                str.append(" WHERE " + exp.toString() + " AND ");
-                first = false;
-                continue;
-            }
-            
-            str.append(exp.toString() + "AND");
-        }
-         str.delete(str.lastIndexOf("A"),str.lastIndexOf("A") + 3);
-        
-         try {
-            
-            this.setExpression(str.toString());
+        try {
             return _connection.createStatement().executeQuery(this.getExpression());
         } catch (SQLException ex) {
             

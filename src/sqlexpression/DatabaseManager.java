@@ -65,10 +65,10 @@ public class DatabaseManager {
             _username = username;
             _password = password;
 	}
-        public static void start(SqlDriver driver, String server, int port, String tableName, String username, String password)
+        public static void start(SqlDriver driver, String server, int port, String dbName, String username, String password)
 	{
             _driver = driver;
-            _uri = _driver.getUri() + "://" + server + ":" + port + "/" + tableName;
+            _uri = _driver.getUri() + "://" + server + ":" + port + "/" + dbName;
             _username = username;
             _password = password;
 	}

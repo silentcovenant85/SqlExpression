@@ -98,10 +98,12 @@ public class UpdateExpression extends ConditionalSqlExpression{
 
             builder.append(item.getKey()+ "=" + objStr + ",");
         }
+        
         builder.deleteCharAt(builder.lastIndexOf(","));
-            
+        builder = super.buildCondition(builder);
+        this.setExpression(builder.toString());
+                    
         try {
-            this.setExpression(builder.toString());
             _connection.createStatement().execute(this.getExpression());
         } catch (SQLException ex) {
             

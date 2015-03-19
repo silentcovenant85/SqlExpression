@@ -28,29 +28,13 @@ public class DeleteExpression extends ConditionalSqlExpression {
 
     @Override
     protected ResultSet execute(Connection _connection) throws SqlExpressionException {
+        
         StringBuilder str = new StringBuilder("DELETE FROM ");
-        
         str.append(this.getFrom());
+        str = super.buildCondition(str);
+        this.setExpression(str.toString());
         
-        boolean first = true;
-        for(WhereExpression exp : this.getWhereStatements())
-        {
-            if(first)
-            {
-                str.append(" WHERE " + exp.toString() + " AND ");
-                first = false;
-                continue;
-            }
-            
-            str.append(exp.toString() + "AND");
-        }
-        
-         if(str.lastIndexOf("A")!=-1)
-            str.delete(str.lastIndexOf("A"),str.lastIndexOf("A") + 3);
-        
-         try {
-            
-            this.setExpression(str.toString());
+         try {    
             _connection.createStatement().execute(this.getExpression());
         } catch (SQLException ex) {
             

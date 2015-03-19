@@ -7,7 +7,6 @@ package sqlexpressiontest;
 
 import java.sql.SQLException;
 import junit.framework.TestCase;
-import org.junit.Assert;
 import sqlexpression.DatabaseManager;
 import sqlexpression.DeleteExpression;
 import sqlexpression.InsertExpression;
@@ -83,7 +82,7 @@ public class DatabaseTest extends TestCase {
         
         DeleteExpression deleteExp = new DeleteExpression(DatabaseManager.get_connection(),"MYPRODUCT");
         deleteExp.execute();
-    }
+    }    
     
     public void testUpdateExpresson() throws SqlExpressionException
     {
