@@ -11,18 +11,13 @@ public class InsertExpression extends SqlExpression {
 
     private Map<String,String> _inserts;
 	
-    public InsertExpression(Connection _connection) {
-	super(_connection);
-        _inserts = new LinkedHashMap<String,String>();
-    }
-    public InsertExpression(Connection _connection, String table) {
-		this(_connection);
-                super.setFrom(table);
-		// TODO Auto-generated constructor stub
+    public InsertExpression(Connection connection, String table) {
+		super(connection, table);
+                _inserts = new LinkedHashMap<String,String> ();
 	}
-    public InsertExpression(Connection _connection,String table, LinkedHashMap<String,String> values)
+    public InsertExpression(Connection connection,String table, LinkedHashMap<String,String> values)
 	{
-		this(_connection);
+		this(connection, table);
 		this._inserts = values;
 	}
 
@@ -71,6 +66,7 @@ public class InsertExpression extends SqlExpression {
         }
     }
 
+    @Override
     protected boolean validateExpression() throws SqlExpressionException 
     {
         boolean retval = super.validateExpression();
@@ -81,31 +77,46 @@ public class InsertExpression extends SqlExpression {
         return retval;
     }
             
+     @Override
+    protected void buildExpression()
+    {
+        StringBuilder expression = new StringBuilder(QueryType.INSERT.toString());
+        expression.append(" INTO ");
+        expression.append(this.getFrom()).append(" (");
+        
+        for(Entry<String, String> item : _inserts.entrySet())
+        {
+            expression.append(item.getKey()+",");
+        }
+        
+        expression = trimExpression(expression);
+        expression.append(" VALUES(");
+        for(Entry<String, String> item : _inserts.entrySet())
+        {
+            expression.append(item.getValue()+",");
+        }
+        expression = trimExpression(expression);
+  
+        setExpression(expression.toString());
+    }
+            
+    private StringBuilder trimExpression(StringBuilder expression)
+    {
+        expression.deleteCharAt(expression.lastIndexOf(","));
+        expression.append(")");
+        
+        return expression;
+    }
+        
     @Override
-    protected ResultSet execute(Connection _connection) throws SqlExpressionException {
-        StringBuilder builder = new StringBuilder("INSERT INTO");
-        builder.append(" " + this.getFrom() + " (");
-
-        for(Entry<String, String> item : _inserts.entrySet())
+    protected ResultSet execute(Connection connection, String expression) throws SqlExpressionException {       
+        try 
         {
-            builder.append(item.getKey()+",");
-        }
-        builder.deleteCharAt(builder.lastIndexOf(","));
-        builder.append(")");
-        builder.append(" VALUES(");
-        for(Entry<String, String> item : _inserts.entrySet())
-        {
-            builder.append(item.getValue()+",");
-        }
-        builder.deleteCharAt(builder.lastIndexOf(","));
-        builder.append(")");
-        setExpression(builder.toString());
-                    
-        try {
-            _connection.createStatement().execute(this.getExpression());
+            connection.createStatement().executeUpdate(this.getExpression());
+            
         } catch (SQLException ex) {
             
-            throw new SqlExpressionException("Error occured during insert.\nQuery:\n"+builder.toString());
+            throw new SqlExpressionException("Error occured during insert.\nQuery:\n"+expression.toString());
         }
           
         return null;

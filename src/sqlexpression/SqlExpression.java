@@ -8,13 +8,41 @@ public abstract class SqlExpression {
     private Connection _connection;
     private String _from;
     private String _expression;
-    
     private ResultSet _result;
 	
-    public SqlExpression(Connection connection) {		
-            this._connection = connection;
+    public SqlExpression(Connection connection, String from) {		
+            setConnection(connection);
+            setFrom(from);
 	}
 	
+    /**
+     * @return the _connection
+     */
+    public Connection getConnection() {
+        return _connection;
+    }
+
+    /**
+     * @param _connection the _connection to set
+     */
+    public void setConnection(Connection _connection) {
+        this._connection = _connection;
+    }
+    
+    /**
+     * @return the _expression
+     */
+    protected String getExpression() {
+        return _expression;
+    }
+
+    /**
+     * @param _expression the _expression to set
+     */
+    protected void setExpression(String _expression) {
+        this._expression = _expression;
+    }
+    
     /**
      * @return the _from
      */
@@ -27,6 +55,11 @@ public abstract class SqlExpression {
      */
     public void setFrom(String _from) {
         this._from = _from;
+    }
+    
+    public SqlExpression join(SqlExpression exp, String _withTable,String toMember)
+    {
+        return null;
     }
     
     protected boolean validateExpression() throws SqlExpressionException
@@ -44,23 +77,17 @@ public abstract class SqlExpression {
         if(validateExpression() == false)
            throw new SqlExpressionException("Something is wrong with the sql expression.");
             
-        _result = execute(_connection);
+        buildExpression();
+        _result = execute(getConnection(),getExpression());
         return _result;
      }
-            
-    protected abstract ResultSet execute(Connection _connection) throws SqlExpressionException;
+                
+    protected abstract void buildExpression();
+    protected abstract ResultSet execute(Connection connection, String expression) throws SqlExpressionException;
 
-    /**
-     * @return the _expression
-     */
-    protected String getExpression() {
-        return _expression;
-    }
-
-    /**
-     * @param _expression the _expression to set
-     */
-    protected void setExpression(String _expression) {
-        this._expression = _expression;
+    @Override
+    public String toString()
+    {
+        return getExpression();
     }
 }

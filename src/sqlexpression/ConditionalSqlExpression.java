@@ -7,7 +7,6 @@
 package sqlexpression;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,8 +15,9 @@ public abstract class ConditionalSqlExpression extends SqlExpression{
 
     private List<WhereExpression> _whereclauses;
     
-    public ConditionalSqlExpression(Connection connection) {
-        super(connection);
+    public ConditionalSqlExpression(Connection connection, String table) {
+        super(connection, table);
+        
         _whereclauses = new ArrayList<WhereExpression>();
     }
         
@@ -35,30 +35,33 @@ public abstract class ConditionalSqlExpression extends SqlExpression{
         _whereclauses.add(exp);
     }
     
-    public StringBuilder buildCondition(StringBuilder str)
+    public List<WhereExpression> getWhereStatements()
     {
+        return _whereclauses;
+    }
+    
+    @Override
+    protected void buildExpression() {
+    
+        StringBuilder expression = new StringBuilder(getExpression());
+        
         boolean first = true;
         for(WhereExpression exp : getWhereStatements())
         {
             if(first)
             {
-                str.append(" WHERE " + exp.toString() + " AND ");
+                expression.append(" WHERE " + exp.toString() + " AND ");
                 first = false;
                 continue;
             }
             
-            str.append(exp.toString() + "AND");
+            expression.append(exp.toString() + "AND");
         }
         
-         if(str.lastIndexOf("AND")!=-1)
-            str.delete(str.lastIndexOf("A"),str.lastIndexOf("A") + 3);
+         if(expression.lastIndexOf("AND")!=-1)
+            expression.delete(expression.lastIndexOf("A"),expression.lastIndexOf("A") + 3);
         
-         return str;
-    }
-            
-    public List<WhereExpression> getWhereStatements()
-    {
-        return _whereclauses;
-    }
+         setExpression(expression.toString());
+    } 
     
 }

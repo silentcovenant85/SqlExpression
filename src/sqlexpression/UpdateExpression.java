@@ -22,17 +22,14 @@ public class UpdateExpression extends ConditionalSqlExpression{
     
     private Map<String,Object> _updates;
     
-    public UpdateExpression(Connection _connection) {
-	super(_connection);
-        _updates = new LinkedHashMap<String,Object>();
-    }
-    public UpdateExpression(Connection _connection, String table){
-		this(_connection);
-                super.setFrom(table);
-		// TODO Auto-generated constructor stub
+    public UpdateExpression(Connection connection, String table){
+		super(connection, table);
+                
+                _updates = new LinkedHashMap<String,Object>();
     }
     public UpdateExpression(Connection _connection,String table, LinkedHashMap<String,Object> values){
-		this(_connection);
+		this(_connection, table);
+                
 		this._updates = values;
     }
 
@@ -82,11 +79,26 @@ public class UpdateExpression extends ConditionalSqlExpression{
     }
     
     @Override
-    protected ResultSet execute(Connection _connection) throws SqlExpressionException {
-       
-        StringBuilder builder = new StringBuilder("UPDATE");
-        builder.append(" " + this.getFrom() + " SET ");
-
+    protected ResultSet execute(Connection connection, String expression) throws SqlExpressionException {      
+        
+        try 
+        {
+            connection.createStatement().executeUpdate(this.getExpression());
+            
+        } catch (SQLException ex) {
+            
+            throw new SqlExpressionException("Error occured during update.\nQuery:\n"+ expression.toString());
+        }
+          
+        return null;
+    }
+    
+     @Override
+    protected void buildExpression()
+    {
+        StringBuilder expression = new StringBuilder(QueryType.UPDATE.toString());
+        expression.append(" " + this.getFrom() + " SET ");
+        
         for(Map.Entry<String, Object> item : _updates.entrySet())
         {
             Object obj = item.getValue();
@@ -96,21 +108,12 @@ public class UpdateExpression extends ConditionalSqlExpression{
                 objStr = "'"+obj+"'";
             }
 
-            builder.append(item.getKey()+ "=" + objStr + ",");
+            expression.append(item.getKey()+ "=" + objStr + ",");
         }
         
-        builder.deleteCharAt(builder.lastIndexOf(","));
-        builder = super.buildCondition(builder);
-        this.setExpression(builder.toString());
-                    
-        try {
-            _connection.createStatement().execute(this.getExpression());
-        } catch (SQLException ex) {
-            
-            throw new SqlExpressionException("Error occured during update.\nQuery:\n"+builder.toString());
-        }
-          
-           return null;
+        expression.deleteCharAt(expression.lastIndexOf(","));
+        setExpression(expression.toString());
+        
+        super.buildExpression();
     }
-
 }

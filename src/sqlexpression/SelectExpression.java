@@ -19,13 +19,10 @@ public class SelectExpression extends ConditionalSqlExpression {
 
     private ArrayList<String> _selects;
     
-    public SelectExpression(Connection connection) {
-        super(connection);
+    public SelectExpression(Connection connection, String table) {
+	super(connection,table);
+        
         _selects = new ArrayList<String>();
-    }
-    public SelectExpression(Connection _connection, String table) {
-	this(_connection);
-        super.setFrom(table);
     }
     
     public void select(ArrayList<String> selections)
@@ -45,31 +42,39 @@ public class SelectExpression extends ConditionalSqlExpression {
     }
     
     @Override
-    protected ResultSet execute(Connection _connection) throws SqlExpressionException {
+    protected ResultSet execute(Connection connection, String expression) throws SqlExpressionException {
         
-        StringBuilder str = new StringBuilder("SELECT ");
+        try 
+        {
+            return connection.createStatement().executeQuery(expression);
+            
+        } catch (SQLException ex) {
+            
+            throw new SqlExpressionException("Error occured during selection.\nQuery:\n"+ expression);
+        }
+    }
+
+    @Override
+    protected void buildExpression() {
+        
+        StringBuilder expression = new StringBuilder(QueryType.SELECT.toString());
         
         if(_selects.isEmpty())
-            str.append("*");
+            expression.append(" * ");
         else    
         {
             for(String item : _selects)
             {
-                str.append(item + ",");
+                expression.append(" " + item + ",");
             }
-            str.deleteCharAt(str.lastIndexOf(","));
-        }
-        
-        str.append(" FROM " + this.getFrom());
-        str = super.buildCondition(str);
-        this.setExpression(str.toString());
-        
-        try {
-            return _connection.createStatement().executeQuery(this.getExpression());
-        } catch (SQLException ex) {
             
-            throw new SqlExpressionException("Error occured during selection.\nQuery:\n"+str.toString());
+            expression = expression.deleteCharAt(expression.lastIndexOf(","));
         }
+        
+        expression.append(" FROM " + this.getFrom() + " ");
+        this.setExpression(expression.toString());
+        
+        super.buildExpression();
     }
   
 }

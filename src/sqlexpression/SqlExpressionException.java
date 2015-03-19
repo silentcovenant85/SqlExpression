@@ -16,6 +16,6 @@ public class SqlExpressionException extends SQLException{
     
     public SqlExpressionException(String exception)
     {
-        super(exception);
+        super("Something is wrong with your sql statement.",exception);
     }
 }
