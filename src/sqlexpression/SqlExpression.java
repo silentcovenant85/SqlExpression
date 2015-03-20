@@ -57,11 +57,6 @@ public abstract class SqlExpression {
         this._from = _from;
     }
     
-    public SqlExpression join(SqlExpression exp, String _withTable,String toMember)
-    {
-        return null;
-    }
-    
     protected boolean validateExpression() throws SqlExpressionException
     {
         if(_from == null)
