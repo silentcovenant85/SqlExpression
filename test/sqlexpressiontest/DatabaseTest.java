@@ -31,7 +31,7 @@ public class DatabaseTest extends TestCase {
         //TODO: add checking if table already exists.....
        
        DatabaseManager.start(SqlDriver.Derby, "jdbc:derby://localhost:1527/sample", "app", "app");
-       DatabaseManager.get_connection().createStatement().execute("CREATE TABLE MYPRODUCT(PROD_CODE VARCHAR(2), DISCOUNT_CODE VARCHAR(1), DESCRIPTION VARCHAR(10))");      
+       DatabaseManager.getConnection().createStatement().execute("CREATE TABLE MYPRODUCT(PROD_CODE VARCHAR(2), DISCOUNT_CODE VARCHAR(1), DESCRIPTION VARCHAR(10))");      
     }
 
     /**
@@ -40,7 +40,7 @@ public class DatabaseTest extends TestCase {
      */
     protected void tearDown() throws Exception {
         
-       DatabaseManager.get_connection().createStatement().execute("DROP TABLE MYPRODUCT");
+       DatabaseManager.getConnection().createStatement().execute("DROP TABLE MYPRODUCT");
     }
 
     public void testSqlConnectionUsingURI() throws SQLException {
@@ -60,7 +60,7 @@ public class DatabaseTest extends TestCase {
         DatabaseManager.start(SqlDriver.Derby, "jdbc:derby://localhost:1527/sample", "app", "app");
 
         // create temp table
-        InsertExpression exp = new InsertExpression(DatabaseManager.get_connection(), "MYPRODUCT");
+        InsertExpression exp = new InsertExpression(DatabaseManager.getConnection(), "MYPRODUCT");
         exp.insert("PROD_CODE", "XX");//max 2
         exp.insert("DISCOUNT_CODE : 'X'; DESCRIPTION : 'Sample'");//max 1
         exp.execute();
@@ -70,7 +70,7 @@ public class DatabaseTest extends TestCase {
   
         testInsertExpression();
     
-        SelectExpression exp = new SelectExpression(DatabaseManager.get_connection(), "MYPRODUCT");
+        SelectExpression exp = new SelectExpression(DatabaseManager.getConnection(), "MYPRODUCT");
         exp.select("PROD_CODE");
         exp.select("DISCOUNT_CODE,DESCRIPTION");
         exp.where("PROD_CODE", OperationEnum.Equal, "XX");
@@ -81,7 +81,7 @@ public class DatabaseTest extends TestCase {
   
         testInsertExpression();
     
-        SelectExpression exp = new SelectExpression(DatabaseManager.get_connection(), "MYPRODUCT");
+        SelectExpression exp = new SelectExpression(DatabaseManager.getConnection(), "MYPRODUCT");
         exp.select("PROD_CODE");
         exp.select("DISCOUNT_CODE,DESCRIPTION");
         
@@ -95,7 +95,7 @@ public class DatabaseTest extends TestCase {
     {
         testInsertExpression();
         
-        DeleteExpression deleteExp = new DeleteExpression(DatabaseManager.get_connection(),"MYPRODUCT");
+        DeleteExpression deleteExp = new DeleteExpression(DatabaseManager.getConnection(),"MYPRODUCT");
         deleteExp.execute();
     }    
     
@@ -103,7 +103,7 @@ public class DatabaseTest extends TestCase {
     {
         testInsertExpression();
         
-        UpdateExpression updateExp = new UpdateExpression(DatabaseManager.get_connection(),"MYPRODUCT");
+        UpdateExpression updateExp = new UpdateExpression(DatabaseManager.getConnection(),"MYPRODUCT");
         updateExp.update("PROD_CODE:ZZ");
         updateExp.execute();
     }

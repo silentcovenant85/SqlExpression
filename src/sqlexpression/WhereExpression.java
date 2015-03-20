@@ -26,8 +26,7 @@ public class WhereExpression extends OperationExpression<String,Object>{
         String operand2 = "";
         if(this.getOperand2() instanceof String)
             operand2 = "'" + this.getOperand2().toString() + "'";
-        
-        if(this.getOperand2() instanceof Iterable)
+        else if(this.getOperand2() instanceof Iterable)
         {
             operand2+="(";
             for (Object item : (Iterable)this.getOperand2()) {
