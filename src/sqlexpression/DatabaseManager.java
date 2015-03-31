@@ -10,16 +10,12 @@ public class DatabaseManager {
         private static HashMap<String,Connection> _connections = new HashMap<String,Connection>();
                 
         private static SqlDriver _driver;
-        public SqlDriver getDriver()
-        {
-            return _driver;
-        }
-          
         private static String _username;
         private static String _password;
         private static String _uri;
-    
-	public static Connection get_connection() {
+        private static int _port;
+        
+	public static Connection getConnection() {
 
                Connection _connection = null;
 		if(_connections.containsKey(_uri) == false)
@@ -58,6 +54,7 @@ public class DatabaseManager {
         * @param driver driver (SqlDriver)
         * @param uri example: jdbc:derby://localhost:1527
         */
+        
 	public static void start(SqlDriver driver, String uri, String username, String password)
 	{
             _driver = driver;
@@ -65,6 +62,7 @@ public class DatabaseManager {
             _username = username;
             _password = password;
 	}
+        
         public static void start(SqlDriver driver, String server, int port, String dbName, String username, String password)
 	{
             _driver = driver;
