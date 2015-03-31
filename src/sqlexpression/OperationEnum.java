@@ -19,18 +19,20 @@ public enum OperationEnum {
     GreaterOrEqual(">="),
     LesserThanOrEqual("<="),
     NOT_IN("NOT IN"),
-    IN("IN");
+    IN("IN"),
+    AND("AND"),
+    OR("OR");
     
-    OperationEnum(String str)
+    private final String _operation;
+        
+    OperationEnum(String operation)
     {
-        _strOP = str;
+        _operation = operation;
     }
-    
-    private String _strOP;
     
     @Override
     public String toString()
     {
-        return _strOP;
+        return _operation;
     }
 }

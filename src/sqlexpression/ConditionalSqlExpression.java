@@ -23,7 +23,7 @@ public abstract class ConditionalSqlExpression extends SqlExpression{
         
     public void where(String memberName,OperationEnum op, Object value) throws SqlExpressionException
     {
-        WhereExpression exp = new WhereExpression(memberName, value, op);
+        WhereExpression exp = new WhereExpression(memberName,op,value);
         where(exp);
     }
         
@@ -33,6 +33,12 @@ public abstract class ConditionalSqlExpression extends SqlExpression{
             return;
         
         _whereclauses.add(exp);
+    }
+        
+    public void where(WhereExpression xp1, OperationEnum op, WhereExpression xp2) throws SqlExpressionException
+    {
+        WhereExpression exp = new WhereExpression(xp1,op,xp2);
+        where(exp);
     }
     
     public List<WhereExpression> getWhereStatements()
